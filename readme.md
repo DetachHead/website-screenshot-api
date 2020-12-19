@@ -8,7 +8,7 @@ docker-compose up
 #### examples
 ##### input
 ```
-http://localhost:3000/?input=google.com
+http://localhost:3000/?input=reddit.com
 ```
 ##### output
 ![](examples/normal.png)
