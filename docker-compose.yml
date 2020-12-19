@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+    bot:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        working_dir: /home/node/app
+        volumes:
+            - ./:/home/node/app
+        command: "bash -c 'npm ci && npm run start:prod'"
+        init: true
+        security_opt:
+            - seccomp=assets/chrome.json
