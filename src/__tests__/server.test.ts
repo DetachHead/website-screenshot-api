@@ -1,11 +1,16 @@
 import supertest from 'supertest'
 import {app, port} from "../server";
+import * as http from "http";
 
 const inputHTML = encodeURIComponent('<h1>foo</h1><b>bar</b>')
 
+let server: http.Server
+
 beforeAll(() =>
-    app.listen(port)
+    server = app.listen(port)
 )
+
+afterAll(() => server.close())
 
 describe('positive', () => {
     test('html', done =>
