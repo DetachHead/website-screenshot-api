@@ -9,7 +9,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 15.4
-      - run: npm ci
       - uses: bahmutov/npm-install@v1
   compile:
     runs-on: ubuntu-latest
