@@ -20,5 +20,5 @@ jobs:
     needs: install
     steps:
       - run: npm run test
-      - env:
+        env:
           CI: true
