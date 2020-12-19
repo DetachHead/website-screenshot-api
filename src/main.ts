@@ -10,7 +10,7 @@ const port = process.env.WEBSITE_SCREENSHOT_PORT ?? 3000
 
 interface Options {
     input: string
-    fullPage?: boolean
+    full?: boolean
 }
 
 app.use(boolParser())
@@ -24,7 +24,7 @@ app.get('/', async (req, res, next) => {
             defaultBackground: true,
             delay: 0.5,
             inputType,
-            fullPage: options.fullPage,
+            fullPage: options.full,
             scaleFactor: 1,
             //if using our image, the chrome path has to be specified (https://stackoverflow.com/a/62383642)
             launchOptions: isDocker() ? {executablePath: 'google-chrome-unstable'} : {}
