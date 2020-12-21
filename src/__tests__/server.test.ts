@@ -13,17 +13,32 @@ beforeAll(() =>
 afterAll(() => server.close())
 
 describe('positive', () => {
-    test('html', done =>
-        supertest(app)
-            .get(`/?input=${inputHTML}`)
-            .expect(200, done)
-    )
-
-    test('html full', done =>
-        supertest(app)
-            .get(`/?full=true&input=${inputHTML}`)
-            .expect(200, done)
-    )
+    describe('html', () => {
+        test('full=true', done =>
+            supertest(app)
+                .get(`/?full=true&input=${inputHTML}`)
+                .expect(200, done)
+        )
+        test('full=false', done =>
+            supertest(app)
+                .get(`/?input=${inputHTML}`)
+                .expect(200, done)
+        )
+    })
+    describe('site', () => {
+        //test it on itself
+        const site = `localhost:${port}`
+        test('without protocol', done =>
+            supertest(app)
+                .get(`/?input=${site}`)
+                .expect(200, done)
+        )
+        test('with protocol', done =>
+            supertest(app)
+                .get(`/?input=http://${site}`)
+                .expect(200, done)
+        )
+    })
 })
 
 describe('negative', () => {
