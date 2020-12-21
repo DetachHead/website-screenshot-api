@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "setup": "npm ci",
     "build": "rimraf ./bin/* && ttsc",
     "test": "jest",
     "start:prod": "npm run build && node bin/main",
