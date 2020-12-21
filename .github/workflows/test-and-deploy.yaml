@@ -29,4 +29,4 @@ jobs:
         shell: bash
       - name: deploy
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -o StrictHostKeyChecking=no "cd /website-screenshot-api && git pull && npm run setup"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -o StrictHostKeyChecking=no "cd /website-screenshot-api && git pull && docker-compose down && docker-compose up -d"
