@@ -19,8 +19,9 @@ app.use(boolParser())
 app.get('/', async (req, res, next) => {
     try {
         const options = assertEquals<Options>(req.query)
-        const inputType: 'url' | 'html' = options.input.startsWith('<') ? 'html' : 'url'
-        const input = inputType === 'url' ? normalizeUrl(decodeURIComponent(options.input)) : options.input
+        const inputParam = decodeURIComponent(options.input)
+        const inputType: 'url' | 'html' = inputParam.startsWith('<') ? 'html' : 'url'
+        const input = inputType === 'url' ? normalizeUrl(inputParam) : inputParam
         const captureOptions: captureWebsite.Options = {
             defaultBackground: true,
             delay: 0.5,
