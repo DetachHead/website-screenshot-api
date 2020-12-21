@@ -20,7 +20,7 @@ app.get('/', async (req, res, next) => {
     try {
         const options = assertEquals<Options>(req.query)
         const inputType: 'url' | 'html' = options.input.startsWith('<') ? 'html' : 'url'
-        const input = inputType === 'url' ? normalizeUrl(options.input) : options.input
+        const input = inputType === 'url' ? normalizeUrl(decodeURIComponent(options.input)) : options.input
         const captureOptions: captureWebsite.Options = {
             defaultBackground: true,
             delay: 0.5,
