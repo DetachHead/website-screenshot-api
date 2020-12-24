@@ -1,8 +1,9 @@
 import express from 'express'
-import captureWebsite from 'capture-website'
+import puppeteer from 'puppeteer'
 import isDocker from 'is-docker'
 import {assertEquals} from "typescript-is";
 import normalizeUrl from 'normalize-url'
+
 
 const boolParser = require('express-query-boolean')
 
@@ -19,19 +20,7 @@ app.use(boolParser())
 app.get('/', async (req, res, next) => {
     try {
         const options = assertEquals<Options>(req.query)
-        const inputParam = decodeURIComponent(options.input)
-        const inputType: 'url' | 'html' = inputParam.startsWith('<') ? 'html' : 'url'
-        const input = inputType === 'url' ? normalizeUrl(inputParam) : inputParam
-        const captureOptions: captureWebsite.Options = {
-            defaultBackground: true,
-            delay: 0.5,
-            inputType,
-            fullPage: options.full,
-            scaleFactor: 1,
-            //if using our image, the chrome path has to be specified (https://stackoverflow.com/a/62383642)
-            launchOptions: isDocker() ? {executablePath: 'google-chrome-unstable'} : {}
-        }
-        const response = await captureWebsite.buffer(input, captureOptions)
+        const response = await takeScreenshot(decodeURIComponent(options.input), options.full)
         res.set('Content-Type', 'image/png')
         res.send(response)
     } catch (err) {
@@ -40,3 +29,33 @@ app.get('/', async (req, res, next) => {
         next(err)
     }
 })
+
+async function takeScreenshot(input: string, fullPage = false) {
+    const inputType: 'url' | 'html' = input.startsWith('<') ? 'html' : 'url'
+    const normalizedInput = inputType === 'url' ? normalizeUrl(input) : input
+    const browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: {
+            width: 1280,
+            height: 800
+        },
+        executablePath: isDocker() ? 'google-chrome-unstable' : undefined
+    })
+    try {
+        const page = await browser.newPage()
+        page.on('dialog', dialog => dialog.dismiss())
+        await (() => {
+            switch (inputType) {
+                case "url":
+                    return page.goto(normalizedInput)
+                case "html":
+                    return page.setContent(normalizedInput)
+            }
+        })()
+        return await page.screenshot({encoding: "binary", fullPage})
+    } catch (err) {
+        throw err
+    } finally {
+        await browser.close()
+    }
+}
