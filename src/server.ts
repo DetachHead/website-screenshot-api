@@ -1,5 +1,5 @@
 import express from 'express'
-import puppeteer from 'puppeteer'
+import puppeteer, {NavigationOptions} from 'puppeteer'
 import isDocker from 'is-docker'
 import {assertEquals} from "typescript-is";
 import normalizeUrl from 'normalize-url'
@@ -43,7 +43,10 @@ async function takeScreenshot(input: string, fullPage = false) {
     try {
         const page = await browser.newPage()
         page.on('dialog', dialog => dialog.dismiss())
-        await (inputType === 'url'? page.goto(normalizedInput): page.setContent(normalizedInput))
+        const options: NavigationOptions = {waitUntil: 'networkidle0'}
+        await (inputType === 'url'
+            ? page.goto(normalizedInput, options)
+            : page.setContent(normalizedInput, options))
         return await page.screenshot({encoding: "binary", fullPage})
     } catch (err) {
         throw err
