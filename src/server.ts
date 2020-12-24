@@ -43,7 +43,7 @@ async function takeScreenshot(input: string, fullPage = false) {
     try {
         const page = await browser.newPage()
         page.on('dialog', dialog => dialog.dismiss())
-        await (inputType === 'url' ? page.goto : page.setContent)(normalizedInput)
+        await (inputType === 'url'? page.goto(normalizedInput): page.setContent(normalizedInput))
         return await page.screenshot({encoding: "binary", fullPage})
     } catch (err) {
         throw err
