@@ -34,7 +34,6 @@ async function takeScreenshot(input: string, fullPage = false) {
     const inputType: 'url' | 'html' = input.startsWith('<') ? 'html' : 'url'
     const normalizedInput = inputType === 'url' ? normalizeUrl(input) : input
     const browser = await puppeteer.launch({
-        headless: false,
         defaultViewport: {
             width: 1280,
             height: 800
