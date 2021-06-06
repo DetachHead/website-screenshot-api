@@ -20,16 +20,21 @@ interface Options {
 
 app.use(boolParser())
 
-app.get('/', async (req, res, next) => {
+app.get('/', async (req, res) => {
     try {
-        const options = assertEquals<Options>(req.query)
+        let options: Options
+        try {
+            options = assertEquals<Options>(req.query)
+        } catch(e) {
+            res.status(422).send(e.toString())
+            return
+        }
         const response = await takeScreenshot(decodeURIComponent(options.input), options.full, options.blockAds)
         res.set('Content-Type', 'image/png')
         res.send(response)
     } catch (err) {
-        //TODO: better erroring
         console.error(err)
-        next(err)
+        res.status(500).send(err.toString())
     }
 })
 
