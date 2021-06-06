@@ -50,6 +50,6 @@ describe('negative', () => {
     test('no input', done =>
         supertest(app)
             .get('/')
-            .expect(500, done)
+            .expect(422, done)
     )
 })
