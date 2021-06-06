@@ -1,8 +1,10 @@
 import express from 'express'
 import puppeteer, {NavigationOptions} from 'puppeteer'
+import {PuppeteerBlocker} from '@cliqz/adblocker-puppeteer';
 import isDocker from 'is-docker'
 import {assertEquals} from "typescript-is";
 import normalizeUrl from 'normalize-url'
+import fetch from 'cross-fetch'
 
 
 const boolParser = require('express-query-boolean')
@@ -13,6 +15,7 @@ export const port = process.env.WEBSITE_SCREENSHOT_PORT ?? 3000
 interface Options {
     input: string
     full?: boolean
+    blockAds?: boolean
 }
 
 app.use(boolParser())
@@ -20,7 +23,7 @@ app.use(boolParser())
 app.get('/', async (req, res, next) => {
     try {
         const options = assertEquals<Options>(req.query)
-        const response = await takeScreenshot(decodeURIComponent(options.input), options.full)
+        const response = await takeScreenshot(decodeURIComponent(options.input), options.full, options.blockAds)
         res.set('Content-Type', 'image/png')
         res.send(response)
     } catch (err) {
@@ -30,7 +33,7 @@ app.get('/', async (req, res, next) => {
     }
 })
 
-async function takeScreenshot(input: string, fullPage = false) {
+async function takeScreenshot(input: string, fullPage = false, blockAds = true) {
     const inputType: 'url' | 'html' = input.startsWith('<') ? 'html' : 'url'
     const normalizedInput = inputType === 'url' ? normalizeUrl(input) : input
     const browser = await puppeteer.launch({
@@ -42,6 +45,8 @@ async function takeScreenshot(input: string, fullPage = false) {
     })
     try {
         const page = await browser.newPage()
+        if (blockAds)
+            await (await PuppeteerBlocker.fromPrebuiltAdsAndTracking(fetch)).enableBlockingInPage(page)
         page.on('dialog', dialog => dialog.dismiss())
         const options: NavigationOptions = {waitUntil: 'networkidle0'}
         await (inputType === 'url'
