@@ -9,3 +9,5 @@ services:
         init: true
         security_opt:
             - seccomp=assets/chrome.json
+        ports:
+            - "3000:3000/tcp"
