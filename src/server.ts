@@ -1,7 +1,6 @@
 import express from 'express'
-import puppeteer, {NavigationOptions} from 'puppeteer'
-import {PuppeteerBlocker} from '@cliqz/adblocker-puppeteer';
-import isDocker from 'is-docker'
+import {chromium} from 'playwright'
+import {PlaywrightBlocker} from '@cliqz/adblocker-playwright';
 import {assertEquals} from "typescript-is";
 import normalizeUrl from 'normalize-url'
 import fetch from 'cross-fetch'
@@ -25,7 +24,7 @@ app.get('/', async (req, res) => {
         let options: Options
         try {
             options = assertEquals<Options>(req.query)
-        } catch(e) {
+        } catch (e) {
             res.status(422).send(e.toString())
             return
         }
@@ -41,23 +40,23 @@ app.get('/', async (req, res) => {
 async function takeScreenshot(input: string, fullPage = false, blockAds = true) {
     const inputType: 'url' | 'html' = input.startsWith('<') ? 'html' : 'url'
     const normalizedInput = inputType === 'url' ? normalizeUrl(input) : input
-    const browser = await puppeteer.launch({
-        defaultViewport: {
-            width: 1280,
-            height: 800
-        },
-        executablePath: isDocker() ? 'google-chrome-unstable' : undefined
-    })
+
+    const browser = await chromium.launch()
     try {
-        const page = await browser.newPage()
+        const page = await browser.newPage({
+            viewport: {
+                width: 1280,
+                height: 800
+            }
+        })
         if (blockAds)
-            await (await PuppeteerBlocker.fromPrebuiltAdsAndTracking(fetch)).enableBlockingInPage(page)
+            await (await PlaywrightBlocker.fromPrebuiltAdsAndTracking(fetch)).enableBlockingInPage(page)
         page.on('dialog', dialog => dialog.dismiss())
-        const options: NavigationOptions = {waitUntil: 'networkidle0'}
+        const options = {waitUntil: 'networkidle'} as const
         await (inputType === 'url'
             ? page.goto(normalizedInput, options)
             : page.setContent(normalizedInput, options))
-        return await page.screenshot({encoding: "binary", fullPage})
+        return await page.screenshot({fullPage})
     } catch (err) {
         throw err
     } finally {
