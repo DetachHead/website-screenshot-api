@@ -30,7 +30,8 @@ jobs:
       - name: deploy
         run: >
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -o StrictHostKeyChecking=no
-          "cd website-screenshot-api && git pull
+          "cd website-screenshot-api && git fetch && git reset --hard origin/master
           && docker-compose down
           && docker image rm website-screenshot-api_site -f
           && docker-compose up -d"
+
