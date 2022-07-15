@@ -33,5 +33,5 @@ jobs:
           "cd website-screenshot-api && git fetch && git reset --hard origin/master
           && docker-compose down
           && docker image rm website-screenshot-api_site -f
-          && docker-compose up -d"
+          && docker-compose up -d --remove-orphans" 
 
