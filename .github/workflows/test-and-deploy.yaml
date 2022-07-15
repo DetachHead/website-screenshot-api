@@ -32,5 +32,5 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -o StrictHostKeyChecking=no
           "cd website-screenshot-api && git pull
           && docker-compose down
-          && docker image rm website-screenshot-api_bot -f
+          && docker image rm website-screenshot-api_site -f
           && docker-compose up -d"

@@ -7,7 +7,7 @@
     "setup": "npm ci",
     "build": "rimraf ./bin/* && ttsc",
     "test": "jest",
-    "start:prod": "npm run build && node bin/main",
+    "start:prod": "node bin/main",
     "start:dev": "nodemon"
   },
   "keywords": [],
