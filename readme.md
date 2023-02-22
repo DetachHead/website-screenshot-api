@@ -5,25 +5,9 @@ an api to take screenshots of sites or HTML
 docker-compose up
 ```
 ## usage
-### examples
-#### normal
-##### input
-```
-http://localhost:3000/?input=reddit.com
-```
-##### output
-![](examples/normal.png)
-#### full page
-##### input
-```
-http://localhost:3000/?full=true&input=reddit.com
-```
-##### output
-![](examples/full.png)
-#### html
-##### input
-```
-http://localhost:3000/?input=%3Ch1%3Efoo%3C%2Fh1%3E%3Cb%3Ebar%3C%2Fb%3E
-```
-##### output
-![](examples/html.png)
+### query parameters
+|name|type|description|default
+|:---|----|----|----|
+|`input`|`string`|either a URL to navigate to or HTML to be rendered|(required)
+|`screenshotMode`|`'normal' | 'full' | 'element'`|- `normal`: takes a screenshot of the contents visible in the viewport (default if `input` is a url)<br/>- `full`: includes the entire page in the screenshot<br/>- `element`: mainly for when the input is html, only includes the html content and no empty space. probably won't work properly for most websites (default if `input` is html)|(depends, see description)
+|`blockAds`|`boolean`|whether to block ads using [`@cliqz/adblocker-playwright`](https://www.npmjs.com/package/@cliqz/adblocker-playwright)|`true`
