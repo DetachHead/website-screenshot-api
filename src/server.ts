@@ -39,6 +39,12 @@ app.get('/', async (req, res) => {
 
 async function takeScreenshot({input, screenshotMode, blockAds}: Options) {
     const inputType: 'url' | 'html' = input.startsWith('<') ? 'html' : 'url'
+    if (screenshotMode === undefined) {
+        screenshotMode = inputType === 'url'? 'normal': 'element'
+    }
+    if (inputType === 'url' && screenshotMode === 'element') {
+        input = `<span>${input}</span>`
+    }
     const normalizedInput = inputType === 'url' ? normalizeUrl(input) : input
 
     const browser = await chromium.launch()
@@ -61,9 +67,6 @@ async function takeScreenshot({input, screenshotMode, blockAds}: Options) {
         await (inputType === 'url'
             ? page.goto(normalizedInput, options)
             : page.setContent(normalizedInput, options))
-        if (screenshotMode === undefined) {
-            screenshotMode = inputType === 'url'? 'normal': 'element'
-        }
         switch(screenshotMode) {
             case 'normal':
                 return await page.screenshot()
