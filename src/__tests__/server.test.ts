@@ -14,12 +14,17 @@ afterAll(() => server.close())
 
 describe('positive', () => {
     describe('html', () => {
-        test('full=true', done =>
+        test('screenshotMode=full', done =>
             supertest(app)
-                .get(`/?full=true&input=${inputHTML}`)
+                .get(`/?screenshotMode=full&input=${inputHTML}`)
                 .expect(200, done)
         )
-        test('full=false', done =>
+        test('screenshotMode=normal', done =>
+            supertest(app)
+                .get(`/?input=${inputHTML}`)
+                .expect(200, done)
+        )
+        test('screenshotMode=element', done =>
             supertest(app)
                 .get(`/?input=${inputHTML}`)
                 .expect(200, done)
