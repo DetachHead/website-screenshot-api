@@ -1,6 +1,6 @@
 import express from 'express'
 import {chromium} from 'playwright'
-import {PlaywrightBlocker} from '@cliqz/adblocker-playwright';
+import {adsAndTrackingLists, PlaywrightBlocker} from '@cliqz/adblocker-playwright';
 import {assertEquals} from "typescript-is";
 import normalizeUrl from 'normalize-url'
 import fetch from 'cross-fetch'
@@ -50,7 +50,12 @@ async function takeScreenshot(input: string, fullPage = false, blockAds = true) 
             }
         })
         if (blockAds)
-            await (await PlaywrightBlocker.fromPrebuiltAdsAndTracking(fetch)).enableBlockingInPage(page)
+            await (await PlaywrightBlocker.fromLists(fetch, [
+                ...adsAndTrackingLists,
+                'https://raw.githubusercontent.com/DetachHead/ublock-filters/master/list.txt',
+                'https://raw.githubusercontent.com/ethan-xd/ethan-xd.github.io/master/fb.txt',
+                'https://raw.githubusercontent.com/ethan-xd/ethan-xd.github.io/master/rdt.txt'
+            ])).enableBlockingInPage(page)
         page.on('dialog', dialog => dialog.dismiss())
         const options = {waitUntil: 'networkidle'} as const
         await (inputType === 'url'
