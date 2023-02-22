@@ -13,7 +13,7 @@ export const port = process.env.WEBSITE_SCREENSHOT_PORT ?? 3000
 
 interface Options {
     input: string
-    full?: boolean
+    screenshotMode?: 'normal'|'full'|'element'
     blockAds?: boolean
 }
 
@@ -28,7 +28,7 @@ app.get('/', async (req, res) => {
             res.status(422).send(e.toString())
             return
         }
-        const response = await takeScreenshot(decodeURIComponent(options.input), options.full, options.blockAds)
+        const response = await takeScreenshot(options)
         res.set('Content-Type', 'image/png')
         res.send(response)
     } catch (err) {
@@ -37,7 +37,7 @@ app.get('/', async (req, res) => {
     }
 })
 
-async function takeScreenshot(input: string, fullPage = false, blockAds = true) {
+async function takeScreenshot({input, screenshotMode, blockAds}: Options) {
     const inputType: 'url' | 'html' = input.startsWith('<') ? 'html' : 'url'
     const normalizedInput = inputType === 'url' ? normalizeUrl(input) : input
 
@@ -61,7 +61,17 @@ async function takeScreenshot(input: string, fullPage = false, blockAds = true) 
         await (inputType === 'url'
             ? page.goto(normalizedInput, options)
             : page.setContent(normalizedInput, options))
-        return await page.screenshot({fullPage})
+        if (screenshotMode === undefined) {
+            screenshotMode = inputType === 'url'? 'normal': 'element'
+        }
+        switch(screenshotMode) {
+            case 'normal':
+                return await page.screenshot()
+            case 'full':
+                return await page.screenshot({fullPage: true})
+            case 'element':
+                return await page.locator('body>*').first().screenshot()
+        }
     } catch (err) {
         throw err
     } finally {
