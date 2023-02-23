@@ -79,5 +79,5 @@
             }
         ]
     },
-    "include": ["jest.config.ts", "*.eslintrc.js", "types"]
+    "include": ["jest.config.ts", "*.eslintrc.js"]
 }
