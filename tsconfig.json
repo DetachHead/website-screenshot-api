@@ -75,5 +75,5 @@
         "stripInternal": false //https://github.com/microsoft/TypeScript/issues/45307
         // "plugins": [{ "transform": "typescript-is/lib/transform-inline/transformer" }]
     },
-    "include": ["jest.config.ts", "*.eslintrc.js"]
+    "include": ["jest.config.ts", "*.eslintrc.js", "types"]
 }
