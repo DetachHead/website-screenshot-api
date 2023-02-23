@@ -72,8 +72,12 @@
         "noImplicitOverride": true,
         "exactOptionalPropertyTypes": true,
         "allowUnreachableCode": false,
-        "stripInternal": false //https://github.com/microsoft/TypeScript/issues/45307
-        // "plugins": [{ "transform": "typescript-is/lib/transform-inline/transformer" }]
+        "stripInternal": false, //https://github.com/microsoft/TypeScript/issues/45307
+        "plugins": [
+            {
+                "transform": "typia/lib/transform"
+            }
+        ]
     },
     "include": ["jest.config.ts", "*.eslintrc.js", "types"]
 }
