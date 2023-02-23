@@ -4,7 +4,7 @@ import express from 'express'
 import boolParser from 'express-query-boolean'
 import normalizeUrl from 'normalize-url'
 import { chromium } from 'playwright'
-import { assertEquals } from 'typescript-is'
+import { assertEquals } from 'typia'
 
 export const app = express()
 export const port = process.env['WEBSITE_SCREENSHOT_PORT'] ?? 3000
@@ -24,14 +24,14 @@ app.get('/', async (req, res) => {
         try {
             options = assertEquals<Options>(req.query)
         } catch (e) {
-            res.status(422).send(e)
+            res.status(422).send(String(e))
             return
         }
         const response = await takeScreenshot(options)
         res.set('Content-Type', 'image/png')
         res.send(response)
     } catch (err) {
-        console.error(err)
+        console.error(String(err))
         res.status(500).send(err)
     }
 })
