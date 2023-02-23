@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "setup": "npm ci",
-    "build": "rimraf ./dist/* && ttsc",
+    "build": "rimraf ./dist/* && ttsc -p src/tsconfig.json",
     "test": "jest",
     "lint:check": "eslint .",
     "lint:fix": "npm run lint:check -- --fix",
