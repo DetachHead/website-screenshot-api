@@ -1,31 +1,30 @@
-import express from 'express'
-import {chromium} from 'playwright'
-import {adsAndTrackingLists, PlaywrightBlocker} from '@cliqz/adblocker-playwright';
-import {assertEquals} from "typescript-is";
-import normalizeUrl from 'normalize-url'
+import { PlaywrightBlocker, adsAndTrackingLists } from '@cliqz/adblocker-playwright'
 import fetch from 'cross-fetch'
-
-
-const boolParser = require('express-query-boolean')
+import express from 'express'
+import boolParser from 'express-query-boolean'
+import normalizeUrl from 'normalize-url'
+import { chromium } from 'playwright'
+import { assertEquals } from 'typescript-is'
 
 export const app = express()
-export const port = process.env.WEBSITE_SCREENSHOT_PORT ?? 3000
+export const port = process.env['WEBSITE_SCREENSHOT_PORT'] ?? 3000
 
 interface Options {
     input: string
-    screenshotMode?: 'normal'|'full'|'element'
+    screenshotMode?: 'normal' | 'full' | 'element'
     blockAds?: boolean
 }
 
 app.use(boolParser())
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises -- dont care
 app.get('/', async (req, res) => {
     try {
         let options: Options
         try {
             options = assertEquals<Options>(req.query)
         } catch (e) {
-            res.status(422).send(e.toString())
+            res.status(422).send(e)
             return
         }
         const response = await takeScreenshot(options)
@@ -33,14 +32,14 @@ app.get('/', async (req, res) => {
         res.send(response)
     } catch (err) {
         console.error(err)
-        res.status(500).send(err.toString())
+        res.status(500).send(err)
     }
 })
 
-async function takeScreenshot({input, screenshotMode, blockAds}: Options) {
+const takeScreenshot = async ({ input, screenshotMode, blockAds }: Options) => {
     const inputType: 'url' | 'html' = input.startsWith('<') ? 'html' : 'url'
     if (screenshotMode === undefined) {
-        screenshotMode = inputType === 'url'? 'normal': 'element'
+        screenshotMode = inputType === 'url' ? 'normal' : 'element'
     }
     if (inputType === 'url' && screenshotMode === 'element') {
         input = `<span>${input}</span>`
@@ -52,31 +51,31 @@ async function takeScreenshot({input, screenshotMode, blockAds}: Options) {
         const page = await browser.newPage({
             viewport: {
                 width: 1280,
-                height: 800
-            }
+                height: 800,
+            },
         })
         if (blockAds)
-            await (await PlaywrightBlocker.fromLists(fetch, [
-                ...adsAndTrackingLists,
-                'https://raw.githubusercontent.com/DetachHead/ublock-filters/master/list.txt',
-                'https://raw.githubusercontent.com/ethan-xd/ethan-xd.github.io/master/fb.txt',
-                'https://raw.githubusercontent.com/ethan-xd/ethan-xd.github.io/master/rdt.txt'
-            ])).enableBlockingInPage(page)
-        page.on('dialog', dialog => dialog.dismiss())
-        const options = {waitUntil: 'networkidle'} as const
+            await (
+                await PlaywrightBlocker.fromLists(fetch, [
+                    ...adsAndTrackingLists,
+                    'https://raw.githubusercontent.com/DetachHead/ublock-filters/master/list.txt',
+                    'https://raw.githubusercontent.com/ethan-xd/ethan-xd.github.io/master/fb.txt',
+                    'https://raw.githubusercontent.com/ethan-xd/ethan-xd.github.io/master/rdt.txt',
+                ])
+            ).enableBlockingInPage(page)
+        page.on('dialog', (dialog) => void dialog.dismiss())
+        const options = { waitUntil: 'networkidle' } as const
         await (inputType === 'url'
             ? page.goto(normalizedInput, options)
             : page.setContent(normalizedInput, options))
-        switch(screenshotMode) {
+        switch (screenshotMode) {
             case 'normal':
                 return await page.screenshot()
             case 'full':
-                return await page.screenshot({fullPage: true})
+                return await page.screenshot({ fullPage: true })
             case 'element':
                 return await page.locator('body>*').first().screenshot()
         }
-    } catch (err) {
-        throw err
     } finally {
         await browser.close()
     }
