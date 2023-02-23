@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 services:
     site:
         build:
@@ -10,4 +10,4 @@ services:
         security_opt:
             - seccomp=assets/chrome.json
         ports:
-            - "3000:3000/tcp"
+            - '3000:3000/tcp'
