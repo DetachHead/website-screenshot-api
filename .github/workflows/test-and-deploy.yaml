@@ -8,8 +8,7 @@ jobs:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v1
               with:
-                  node-version: 15.4 # https://github.com/cevek/ttypescript/issues/143
-            - run: npm i -g npm@8.5.2 # https://github.com/npm/cli/issues/2846#issuecomment-1055916073
+                  node-version: 19.7.0
             - run: npm ci
             - run: npm run check
               env:
