@@ -12,33 +12,33 @@ afterAll(() => server.close())
 
 describe('positive', () => {
     describe('html', () => {
-        test('screenshotMode=full', (done) => {
-            void supertest(app).get(`/?screenshotMode=full&input=${inputHTML}`).expect(200, done)
+        test('screenshotMode=full', async () => {
+            await supertest(app).get(`/?screenshotMode=full&input=${inputHTML}`).expect(200)
         })
-        test('screenshotMode=normal', (done) => {
-            void supertest(app).get(`/?input=${inputHTML}`).expect(200, done)
+        test('screenshotMode=normal', async () => {
+            await supertest(app).get(`/?input=${inputHTML}`).expect(200)
         })
-        test('screenshotMode=element', (done) => {
-            void supertest(app).get(`/?input=${inputHTML}`).expect(200, done)
+        test('screenshotMode=element', async () => {
+            await supertest(app).get(`/?input=${inputHTML}`).expect(200)
         })
     })
     describe('site', () => {
         // test it on itself
         const site = `localhost:${port}`
-        test('without protocol', (done) => {
-            void supertest(app).get(`/?input=${site}`).expect(200, done)
+        test('without protocol', async () => {
+            await supertest(app).get(`/?input=${site}`).expect(200)
         })
-        test('with protocol', (done) => {
-            void supertest(app).get(`/?input=http://${site}`).expect(200, done)
+        test('with protocol', async () => {
+            await supertest(app).get(`/?input=http://${site}`).expect(200)
         })
     })
 })
 
 describe('negative', () => {
-    test('invalid site', (done) => {
-        void supertest(app).get('/&input=www.sdfgsdfg.asdfasdfadsgsdf').expect(404, done)
+    test('invalid site', async () => {
+        await supertest(app).get('/?input=www.sdfgsdfg.asdfasdfadsgsdf').expect(500)
     })
-    test('no input', (done) => {
-        void supertest(app).get('/').expect(422, done)
+    test('no input', async () => {
+        await supertest(app).get('/').expect(422)
     })
 })
