@@ -10,5 +10,6 @@ const config: InitialOptionsTsJest = {
             compiler: 'ttypescript',
         },
     },
+    detectOpenHandles: true,
 }
 export default config
