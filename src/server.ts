@@ -31,8 +31,9 @@ app.get('/', async (req, res) => {
         res.set('Content-Type', 'image/png')
         res.send(response)
     } catch (err) {
-        console.error(String(err))
-        res.status(500).send(err)
+        const errorText = String(err)
+        console.error(errorText)
+        res.status(500).send(`<pre>${errorText}</pre>`)
     }
 })
 
