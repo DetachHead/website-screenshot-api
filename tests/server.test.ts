@@ -8,7 +8,9 @@ let server: http.Server
 
 beforeAll(() => (server = app.listen(port)))
 
-afterAll(() => server.close())
+afterAll((done) => {
+    server.close(done)
+})
 
 describe('positive', () => {
     describe('html', () => {
