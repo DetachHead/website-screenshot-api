@@ -19,5 +19,6 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "files.eol": "\n",
     "typescript.enablePromptUseWorkspaceTsdk": true,
-    "git.useEditorAsCommitInput": false
+    "git.useEditorAsCommitInput": false,
+    "jest.autoRun": {}
 }
