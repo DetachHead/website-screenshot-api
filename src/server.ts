@@ -69,13 +69,18 @@ const takeScreenshot = async ({ input, screenshotMode, blockAds }: Options) => {
         await (inputType === 'url'
             ? page.goto(normalizedInput, options)
             : page.setContent(normalizedInput, options))
-        switch (screenshotMode) {
-            case 'normal':
-                return await page.screenshot()
-            case 'full':
-                return await page.screenshot({ fullPage: true })
-            case 'element':
-                return await page.locator('body>*').first().screenshot()
+        if (screenshotMode === 'full') {
+            return await page.screenshot({ fullPage: true })
+        } else {
+            if (screenshotMode === 'element') {
+                const locator = page.locator('body>*')
+                // TODO: wrap elements in a span if >1 element
+                if ((await locator.count()) === 1) {
+                    return await locator.screenshot()
+                }
+            }
+            // if screenshotMode is normal, or element and body had anything other than 1 child element in which case we fallback to normal mode:
+            return await page.screenshot()
         }
     } finally {
         await browser.close()
