@@ -3,8 +3,7 @@ FROM mcr.microsoft.com/playwright:v1.23.1-focal
 RUN useradd node && mkdir -p /home/node/app && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 
-# Add user so we don't need --no-sandbox.
-# same layer as npm install to keep re-chowned files from using up several hundred MBs more space
+# Add user was needed for chrome, dont think its needed now that we use firefox but cbf fucking around with docker and linux shit so it stays
 RUN mkdir -p /home/node/Downloads
 
 COPY package*.json ./
