@@ -11,5 +11,6 @@ const config: InitialOptionsTsJest = {
         },
     },
     detectOpenHandles: true,
+    testTimeout: 30000,
 }
 export default config

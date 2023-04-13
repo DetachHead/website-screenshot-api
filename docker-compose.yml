@@ -7,7 +7,5 @@ services:
         working_dir: /home/node/app
         command: "bash -c 'npm run start:prod'"
         init: true
-        security_opt:
-            - seccomp=assets/chrome.json
         ports:
             - '3000:3000/tcp'

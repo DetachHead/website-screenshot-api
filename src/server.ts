@@ -3,7 +3,7 @@ import fetch from 'cross-fetch'
 import express from 'express'
 import boolParser from 'express-query-boolean'
 import normalizeUrl from 'normalize-url'
-import { chromium } from 'playwright'
+import { firefox } from 'playwright'
 import { assertEquals } from 'typia'
 
 export const app = express()
@@ -47,7 +47,7 @@ const takeScreenshot = async ({ input, screenshotMode, blockAds }: Options) => {
     }
     const normalizedInput = inputType === 'url' ? normalizeUrl(input) : input
 
-    const browser = await chromium.launch()
+    const browser = await firefox.launch()
     try {
         const page = await browser.newPage({
             viewport: {
