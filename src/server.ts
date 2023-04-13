@@ -42,6 +42,9 @@ const takeScreenshot = async ({ input, screenshotMode, blockAds }: Options) => {
     if (screenshotMode === undefined) {
         screenshotMode = inputType === 'url' ? 'normal' : 'element'
     }
+    if (blockAds === undefined) {
+        blockAds = true
+    }
     if (inputType === 'url' && screenshotMode === 'element') {
         input = `<span>${input}</span>`
     }
