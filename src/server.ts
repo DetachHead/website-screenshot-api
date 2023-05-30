@@ -13,6 +13,7 @@ interface Options {
     input: string
     screenshotMode?: 'normal' | 'full' | 'element'
     blockAds?: boolean
+    timeout?: number
 }
 
 app.use(boolParser())
@@ -37,13 +38,16 @@ app.get('/', async (req, res) => {
     }
 })
 
-const takeScreenshot = async ({ input, screenshotMode, blockAds }: Options) => {
+const takeScreenshot = async ({ input, screenshotMode, blockAds, timeout }: Options) => {
     const inputType: 'url' | 'html' = input.startsWith('<') ? 'html' : 'url'
     if (screenshotMode === undefined) {
         screenshotMode = inputType === 'url' ? 'normal' : 'element'
     }
     if (blockAds === undefined) {
         blockAds = true
+    }
+    if (timeout === undefined) {
+        timeout = 60000
     }
     if (inputType === 'url' && screenshotMode === 'element') {
         input = `<span>${input}</span>`
@@ -68,7 +72,7 @@ const takeScreenshot = async ({ input, screenshotMode, blockAds }: Options) => {
                 ])
             ).enableBlockingInPage(page)
         page.on('dialog', (dialog) => void dialog.dismiss())
-        const options = { waitUntil: 'networkidle' } as const
+        const options = { waitUntil: 'networkidle', timeout } as const
         await (inputType === 'url'
             ? page.goto(normalizedInput, options)
             : page.setContent(normalizedInput, options))
