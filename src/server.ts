@@ -1,4 +1,4 @@
-import { PlaywrightBlocker, adsAndTrackingLists } from '@cliqz/adblocker-playwright'
+import { PlaywrightBlocker, adsAndTrackingLists } from '@ghostery/adblocker-playwright'
 import fetch from 'cross-fetch'
 import express from 'express'
 import boolParser from 'express-query-boolean'
@@ -66,7 +66,7 @@ const takeScreenshot = async ({ input, screenshotMode, blockAds, timeout }: Opti
             await (
                 await PlaywrightBlocker.fromLists(fetch, [
                     ...adsAndTrackingLists,
-                    'https://raw.githubusercontent.com/DetachHead/ublock-filters/master/list.txt',
+                    'https://raw.githubusercontent.com/DetachHead/filter-lists/master/list.txt',
                     'https://raw.githubusercontent.com/ethan-xd/ethan-xd.github.io/master/fb.txt',
                     'https://raw.githubusercontent.com/ethan-xd/ethan-xd.github.io/master/rdt.txt',
                 ])

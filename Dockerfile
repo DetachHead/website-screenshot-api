@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.23.1-focal
+FROM mcr.microsoft.com/playwright:v1.58.1
 
 RUN useradd node && mkdir -p /home/node/app && chown -R node:node /home/node/app
 WORKDIR /home/node/app
