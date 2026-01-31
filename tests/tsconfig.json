@@ -1,7 +1,8 @@
 {
     "extends": "../tsconfig.json",
     "compilerOptions": {
-        "types": ["@types/node", "@types/jest", "ts-jest"]
+        "types": ["@types/node", "@types/jest", "ts-jest"],
+        "isolatedModules": false // https://github.com/samchon/typia/issues/1580#issuecomment-3374433453
     },
     "include": ["**/*.ts"]
 }
