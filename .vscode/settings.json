@@ -4,7 +4,7 @@
     "prettier.configPath": ".prettierrc.json",
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": "always"
     },
     "eslint.validate": ["typescript"],
     "git.allowForcePush": true,
@@ -16,9 +16,25 @@
     "git.supportCancellation": true,
     "git.useCommitInputAsStashMessage": true,
     "git.pullBeforeCheckout": true,
+    "git.blame.editorDecoration.enabled": true,
     "diffEditor.ignoreTrimWhitespace": false,
     "files.eol": "\n",
     "typescript.enablePromptUseWorkspaceTsdk": true,
     "git.useEditorAsCommitInput": false,
-    "jest.autoRun": {}
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "jest.runMode": "on-demand",
+    "editor.unicodeHighlight.nonBasicASCII": true,
+    "chat.commandCenter.enabled": false,
+    "telemetry.feedback.enabled": false,
+    "terminal.integrated.scrollback": 10000,
+    "workbench.editor.revealIfOpen": true,
+    "terminal.integrated.env.windows": {
+        "PATH": "${workspaceFolder}/node_modules/.bin;${env:PATH}"
+    },
+    "terminal.integrated.env.osx": {
+        "PATH": "${workspaceFolder}/node_modules/.bin:${env:PATH}"
+    },
+    "terminal.integrated.env.linux": {
+        "PATH": "${workspaceFolder}/node_modules/.bin:${env:PATH}"
+    }
 }
