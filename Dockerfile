@@ -13,3 +13,5 @@ COPY . .
 RUN chown -R node:node /home/node && npm run build
 
 USER node
+
+CMD ["npm", "run", "start:prod"]
